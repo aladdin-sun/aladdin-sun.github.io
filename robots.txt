@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Allow: /search.html
+Disallow: /search.html?q=*
+Sitemap: https://website.com/sitemap.xml
+
+Sitemap: https://https://every-link.github.io/sitemap.txt
