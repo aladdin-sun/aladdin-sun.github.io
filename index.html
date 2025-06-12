@@ -221,7 +221,7 @@ body {touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%;  }
 <p v-html="T.description"></p>
 
 <nav class="center-align">
-<button class="primary small-round small-elevate wave extra" data-ui="#booking">
+<button class="primary small-round small-elevate wave large" data-ui="#booking">
   <span>Book now</span>
 </button>
 </nav>
@@ -273,11 +273,13 @@ body {touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%;  }
     
     
 <div class="row">
-  <button type="submit" value="submit" class="green">
-    <i><img src="/res/pics/whatsapp.svg" alt="icon"></i> <span>whatsapp</span>
+  <button type="submit" value="submit" class="primary black-text max">
+    <i><img src="/res/pics/whatsapp.svg" alt="icon"></i><span>Send</span>
   </button>
       
-  <button @click="adult = 1; child = 0" type="reset" value="reset" class="border"><i>close</i> clear</button>
+  <button @click="adult = 1; child = 0" type="reset" value="reset" class="border error-border error-text">
+    <i>close</i><span>clear</span>
+  </button>
 </div>
     
     
