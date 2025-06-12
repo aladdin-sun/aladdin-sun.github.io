@@ -155,11 +155,17 @@ body {touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%;  }
 
 <button class="border link round transparent" data-ui="#contact"><i>phone</i>
 <menu id="contact" class="left no-wrap">
-  <li><a href="tel:011"><i>phone</i><span>01000000000</span></a></li>
-  <li><a href="sms:0111211"><i>message</i><span>01000000000</span></a></li>
-  <li><a href="whatsapp://send?phone=01111&text=test">
+  <li><a :href="'tel:' + number">
+    <i>phone</i><span v-text="number"></span>
+  </a></li>
+  
+  <li><a :href="'sms:' + number">
+    <i>message</i><span v-text="number"></span>
+  </a></li>
+    
+  <li><a :href="'whatsapp://send?phone=' + number">
     <i><img src="/res/pics/whatsapp.svg" alt="icon"></i>
-    <span>01000000000</span>
+    <span v-text="number"></span>
   </a></li>
 </menu>
 </button>
@@ -403,7 +409,7 @@ scroll(id) {
 
  /*________________________________________________________________*/
 
-
+number: "+201091004788",
 
  
 /*________________________________________________________________*/
