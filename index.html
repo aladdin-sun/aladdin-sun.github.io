@@ -259,7 +259,7 @@ body {touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%;  }
     
 <div class="row">
 <button @click="child--" type="button" class="border transparent left-round"><i>person_remove</i></button>
-  <span v-text="child + (adult === 1 ? ' child' : ' Children')"></span>
+  <span v-text="child + (child <= 1 ? ' child' : ' Children')"></span>
   <button @click="child++" type="button" class="border transparent right-round"><i>person_add</i></button>
 </div>
     
