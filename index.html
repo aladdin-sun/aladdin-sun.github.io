@@ -68,8 +68,8 @@
 <meta content="yes" name="mobile-web-app-capable">
 <meta content="yes" name="apple-mobile-web-app-capable">
 
-<meta content="" name="application-name">
-<meta content="" name="apple-mobile-web-app-title">
+<meta content="Aladdin" name="application-name">
+<meta content="Aladdin" name="apple-mobile-web-app-title">
 <meta content="" name="msapplication-starturl">
 <meta content="force" name="imagemode">
 <meta content="application" name="browsermode">
@@ -118,9 +118,14 @@
 
 <!--[/dns-prefetch]__________________________________________________-->
 
-<link href="https://cdn.jsdelivr.net/npm/beercss@3/dist/cdn/beer.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/beercss@3.11.11/dist/cdn/beer.min.css" rel="stylesheet">
 
+<!--
 <script src="https://cdn.jsdelivr.net/npm/petite-vue/dist/petite-vue.iife.js"></script>
+-->
+
+<script src="/res/js/petite-vue.js"></script>
+
 
 <style>
 [v-cloak] {display: none;}
@@ -211,44 +216,38 @@ body.dark {
 </head>
 
 
-<body class="auto">
+<body class="light">
   
-<div id="app" v-scope :class="W.theme" v-cloak v-effect="watch()" @vue:mounted="mounted">
+<div id="app" v-scope v-cloak v-effect="watch()" @vue:mounted="mounted">
 
 
 
 <nav class="top primary">
-<button class="border link round transparent s m" data-ui="#drawer">
-  <i>menu</i><span>Menu</span>
-</button>
+
+<a href="/"><button class="border round transparent"><i>home</i></button></a>
 
 <div class="max"></div>
-<h5 class="center-align" v-text="W.title"></h5>
+<h5><a href="/">Aladdin</a></h5>
 <div class="max"></div>
 
-<button class="chip circle transparent" @click="changeTheme()">
-  <i v-text="theme === 'auto' ? 'night_sight_auto' : theme + '_mode'"></i>
+<button class="border link round transparent" data-ui="#contact"><i>phone</i>
+<menu id="contact" class="left no-wrap">
+  <li><a href="tel:011"><i>phone</i><span>01000000000</span></a></li>
+  <li><a href="sms:0111211"><i>message</i><span>01000000000</span></a></li>
+  <li><a href="whatsapp://send?phone=01111&text=test">
+    <i><img src="/res/pics/whatsapp.svg" alt="icon"></i>
+    <span>01000000000</span>
+  </a></li>
+</menu>
 </button>
-</nav>
-<nav class="drawer l left scroll">
-
-<header>
-  <nav>
-    <img src="https://www.beercss.com/favicon.png" class="circle">
-    <h6 class="l" v-text="W.title"></h6>
-  </nav>
-</header>
-
-<a v-for="link in W.menu" :href="link.url + '?q=' + R.query" :class="[{active: R.path === link.url}, link.device]">
-<i v-text="link.icon"></i>
-<div v-text="link.name"></div>
-</a>
 
 </nav>
+
+
 
 <div v-if="!R.tour" class="responsive max center-align primary black-text">
   <div class="large-height no-scroll middle-align center-align">
-    <img src="/res/media/hero.svg">
+    <img src="/res/media/hero.svg" loading="lazy">
   </div>
     
   <h3 class="center-align">New Sharm Tours</h3>
@@ -257,9 +256,15 @@ body.dark {
   <div class="small-space"></div>
       
   <nav class="center-align">
-    <button class="small-round black-text border black-border large" @click="$store.scrol('cars')" data-aos="fade-right">book a Car</button>
+    <button class="small-round black-text border black-border large">
+    	contact me
+    </button>
     
-    <button class="small-round black white-text large" @click="$store.scrol('tours')" data-aos="fade-left"><i>link</i><span>Book a Tour</span></button>
+    
+    <button @click="scroll('tours')" class="small-round black white-text large">
+    	<i>link</i><span>Book a Tour</span>
+    </button>
+    
   </nav>
         
   <div class="large-space"></div>
@@ -277,66 +282,111 @@ body.dark {
  
  
 <template v-if="R.tour"><div class="page left active">
-<div v-for="(T, I) in tours.filter(T => T.id === R.tour)">
+<div v-for="(T, I) in $S.tours.filter(T => T.id === R.tour)">
 	
-
-
-	<img class="wave responsive top-round" :src="imgSrc + T.imgs[0]">
+<div class="no-padding" v-scope="{i: 0}">
+<img class="responsive" :src="$S.imgSrc + T.imgs[i]" loading="lazy">
+<div class="absolute bottom left left right padding bottom-shadow white-text">
+<nav>
+<button v-show="i > 0" class="transparent border left-round" @click="i--"><i>arrow_back</i><span>previous</span></button>
+<button v-show="i < T.imgs.length - 1" class="transparent border right-round" @click="i++"><span>next</span><i>arrow_forward</i></button>
+<div class="max"></div>
+ <p v-text="i + 1 + ' / ' + T.imgs.length" class="padding"></p>
+</nav>
+</div>
+</div>
 	
-	<div class="padding">
-		<h5 class="max" v-text="T.title"></h5>
+<div class="padding">
+  
+<h5 v-text="T.title"></h5>
+<p v-html="T.description"></p>
 
-		<p v-text="T.description"></p>
-		
-		
-		
-		<div class="row">
-			<a class="button transparent small-round" href="/">
-				<i>arrow_back</i>
-				</a>
-				
-			<a class="button max primary small-round small-elevate wave" href="/">
-				Book now
-			</a>
-		</div>
-		
-	</div>
-	
+<button class="max primary small-round small-elevate wave" data-ui="#booking">
+  <i>chat</i>
+  <span>Book now</span>
+</button>
+
 </div>
 
 
+<dialog id="booking" v-scope="{adult: 1, child: 0}">
+
+<form action="whatsapp://" class="padding margin">
+  <input type="hidden" name="send" value="+201550579981">
+  <input type="hidden" name="text" value="test">
+
+
+    
+    <div class="field label prefix border"><i>person</i>
+      <input required v-model="" type="text">
+      <label>name <b class="red-text">*</b> </label>
+    </div>
+
+    <div class="field label prefix border"><i>room</i>
+      <input v-model="" type="number">
+      <label>Room Number</label>
+    </div>
+        
+
+    
 <div class="row">
-<article class="medium-width medium-hieght" v-for="T in tours.filter(T => T.id !== R.tour)">
-	<h2 v-text="T.name"></h2>
-</article>
+<button @click="adult--" type="button" class="border transparent left-round"><i>person_remove</i></button>
+<span v-text="adult + (adult === 1 ? ' Adult' : ' Adults')"></span>
+<button @click="adult++" type="button" class="border transparent right-round"><i>person_add</i></button>
 </div>
 
 
+    
+<div class="row">
+<button @click="child--" type="button" class="border transparent left-round"><i>person_remove</i></button>
+  <span v-text="child + (adult === 1 ? ' child' : ' Children')"></span>
+  <button @click="child++" type="button" class="border transparent right-round"><i>person_add</i></button>
+</div>
+    
+    
+    
+    <div class="field textarea label border">
+      <textarea v-model="booking.note"></textarea>
+      <label>Notes</label>
+    </div>
+    
+    
+    
+<div class="row">
+  <button type="submit" value="submit" class="green">
+    <i><img src="/res/pics/whatsapp.svg" alt="icon"></i> <span>whatsapp</span>
+  </button>
+      
+  <button @click="adult = 1; child = 0" type="reset" value="reset" class="border"><i>close</i> clear</button>
+</div>
+    
+    
+    
+  </form>
 
+</dialog>
+
+
+
+
+</div>
 </div></template>
 
 
 
-<template v-else><div class="page left active grid">
+<template v-else><div class="page left active grid" id="tours">
 
 <div class="s12 m6 l4">
-<article class="small-round small-elevate border" v-for="(T, I) in tours">
+<article class="small-round small-elevate border" v-for="(T, I) in $S.tours">
   
-<img class="wave responsive top-round" :src="imgSrc + T.imgs[0]">
+<img class="wave responsive top-round" :src="$S.imgSrc + T.imgs[0]" loading="lazy">
 	
 <div class="padding">
 <h5 class="max" v-text="T.title"></h5>
 
-<p>
-	<i>schedule</i><span class="large-text">1 Hour</span>
-	<i>person</i><span class="large-text" v-text="T.prices.A + '$'"></span>
-</p>
-
-		
-<div class="row">
-	<a class="button max primary small-round small-elevate  wave" :href="'/?tour=' + T.id">Details</a>
-	<button class="border"><i class="green-text">message</i></button>
-</div>
+<nav class="right-align">
+	<a class="button primary small-round small-elevate wave" :href="'/?tour=' + T.id">Details</a>
+</nav>
 		
 </div>
 
@@ -357,24 +407,6 @@ body.dark {
 </main>
 
 
-<dialog id="drawer" class="left scroll no-padding">
-<nav class="drawer">
-
-<header class="fixed"><nav>
-<h6 class="max lin" v-text="W.title"></h6>
-<button class="transparent border link" data-ui="#drawer">
-<span>Close</span> <i>close</i>
-</button>
-</nav></header>
-
-<a v-for="link in W.menu" :href="link.url + ( R.query ?'?q=' + R.query : '')" :class="[{active: R.path === link.url}, link.device]">
-<i v-text="link.icon"></i>
-<span v-text="link.name"></span>
-</a>
-
-</nav>
-
-</dialog>
 
 
 
@@ -392,28 +424,14 @@ $delimiters: ['${', '}'],
 $S: store,
 /*________________________________________________________________*/
 
-W: {
-  
-title: "Hossam",
 
-menu: [
-{name: "Homepage", icon: "home", device: "s m l", url: "/index.html", },
-{name: "search", icon: "search", device: "s m l", url: "/search.html", },
-{name: "tmp", icon: "link", device: "s m l", url: "/TMP.html", },
-],
-
-
-},//W
 
 /*________________________________________________________________*/
 //router
 R: {
-url: window.location.origin + window.location.pathname,
 path: window.location.pathname,
-
 get tour() {return new URLSearchParams(window.location.search).get('tour')},
 get encodedTour() {return encodeURIComponent(this.tour)},
-
 },//router
 
 /*________________________________________________________________*/
@@ -445,58 +463,23 @@ get os() {
 },//device
 
 /*________________________________________________________________*/
-
- //theme
-theme: JSON.parse(localStorage.getItem('theme')) || "auto",
-updateTheme() { document.body.className = this.theme; },
-changeTheme() {
-  if (this.theme === "auto") { this.theme = "dark" }
-  else if (this.theme === "dark") { this.theme = "light" }
-  else if (this.theme === "light") { this.theme = "dark" };
-          localStorage.setItem('theme', JSON.stringify(this.theme))
-          this.updateTheme();
-  },
-  
+ 
+scroll(id) {
+  document.getElementById(id).scrollIntoView({ behavior: 'smooth' })
+},
  /*________________________________________________________________*/
-imgSrc: "/res/pics/tours/",
-tours: [
-	
-{
-	id: "pyramids",
-	title: "Pyramids",
-	description: `
-	Don't miss the chance to step back in time to ancient Egyptian history. Explore one of the 7 wonders of the world: The great Pyramids and sphinx, with a trip to the National Egyptian Museum, home to over 4000 years of history including the contents of Tutankhamun's Tomb.
-Followed by a small boat tour on the river Nile.
-Lunch is included.
-`,
-	imgs: [	
-		"IMG_2278.WEBP"
-		],
-	prices:{adult:'15', child:'25'}
+ 
+ 
+ booking: {
+  
+  name: "",
+  count: 1,
+  note: "",
+  tour_name: "",
+
 },
-  
-{
-	id: "submarin",
-	title: "submarin",
-	description: `
-	diving
-	`,
-	imgs: [
-		"IMG_2280.WEBP"
-	],
-	prices:{A:'15', CH:'25'}
-},
-  
 
-  
-  ],
-/*________________________________________________________________*/
-
-
-
-
-
-
+ /*________________________________________________________________*/
 
 
 
@@ -505,14 +488,12 @@ Lunch is included.
 /*________________________________________________________________*/
 watch(){ },
 /*________________________________________________________________*/
-mounted() {
-this.updateTheme();
-},
+mounted(){ },
 /*________________________________________________________________*/
 }).mount("#app")
 </script>
 
-<script type="module" src="https://cdn.jsdelivr.net/npm/beercss@3/dist/cdn/beer.min.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/npm/beercss@3.11.11/dist/cdn/beer.min.js"></script>
 
 </body>
 </html>
